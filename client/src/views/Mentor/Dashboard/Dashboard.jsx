@@ -27,12 +27,11 @@ export default function Dashboard() {
   const [classrooms, setClassrooms] = useState([]);
   const [value] = useGlobalState('currUser');
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('home');
   const [filter, setFilter] = useState('');
   const [gradeList, setGradeList] = useState([]);
   const [learningStandardList, setLessonModuleList] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
-  const [tab, setTab] = useState(
+  const [activeTab, setActiveTab] = useState(
     searchParams.has('tab') ? searchParams.get('tab') : 'home'
   );
   const [page, setPage] = useState(
@@ -116,7 +115,7 @@ export default function Dashboard() {
           linkBtn={true}
           viewing={viewing}
           setViewing={setViewing}
-          tab={tab}
+          tab={activeTab}
           page={page}
         />
       ),
@@ -329,7 +328,7 @@ export default function Dashboard() {
                 setLessonModuleList={setLessonModuleList}
                 viewing={viewing}
                 setViewing={setViewing}
-                tab={tab}
+                tab={activeTab}
                 page={page}
               />
             </div>
@@ -341,9 +340,9 @@ export default function Dashboard() {
               onChange={(Pagination) => {
                 setViewing(undefined);
                 setPage(Pagination.current);
-                setSearchParams({ tab, page: Pagination.current });
+                setSearchParams({ activeTab, page: Pagination.current });
               }}
-              pagination={{ current: page ? page : 1 }}
+              pagination={{ current: page || 1 }}
             ></Table>
           </div>
         </TabPane>
