@@ -4,9 +4,10 @@ import {
   getClassrooms,
   getLessonModuleAll,
   deleteLessonModule,
-  getGrades
+  getGrades,
+  getTeachers
 } from '../../../Utils/requests';
-import { message, Tabs, Table, Input, Select, Button, Popconfirm } from 'antd';
+import { message, Tabs, Table, Input, Select, Button, Popconfirm, Dropdown, Space } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import './Dashboard.less';
 import DashboardDisplayCodeModal from './DashboardDisplayCodeModal';
@@ -42,6 +43,7 @@ export default function Dashboard() {
   const [sortOrder, setSortOrder] = useState('asc');
   const [activeClassrooms, setActiveClassrooms] = useState([]);
   const [inactiveClassrooms, setInactiveClassrooms] = useState([]);
+  const [teachers, setTeachers] = useState([]);
 
   useEffect(() => {
     let classroomIds = [];
@@ -70,6 +72,15 @@ export default function Dashboard() {
             message.error('Failed to retrieve classrooms');
           }
         });
+        getTeachers().then((teacherResponse) => {
+          if (teacherResponse) {
+            console.log(teacherResponse);
+            const teachersFiltered = teacherResponse.data.map(({first_name, last_name, id}) => ({first_name, last_name, id}))
+            setTeachers(teachersFiltered);
+          } else {
+            message.error('Failed to retrieve teachers');
+          }
+        })
       } else {
         message.error(res.err);
         navigate('/teacherlogin');
@@ -81,11 +92,9 @@ export default function Dashboard() {
         getGrades(),
       ]);
       setLessonModuleList(lsResponse.data);
-
       const grades = gradeResponse.data;
       grades.sort((a, b) => (a.id > b.id ? 1 : -1));
       setGradeList(grades);
-
     };
     fetchData();
   }, [navigate]); // Added navigate to the dependency array as it is being used inside the effect
@@ -153,6 +162,20 @@ export default function Dashboard() {
           }}
         >
           <button id={'link-btn'}>Delete</button>
+        </Popconfirm>
+      ),
+    },
+    {
+      title: 'Share',
+      dataIndex: 'share',
+      key: 'share',
+      width: '10%',
+      align: 'right',
+      render: (_, lesson) => ( // work on adding data from the request for a dropdown
+        <Popconfirm
+          title={'Choose a teacher to share with: '}
+        >
+          <button id={'share-btn'}>Share</button>
         </Popconfirm>
       ),
     },

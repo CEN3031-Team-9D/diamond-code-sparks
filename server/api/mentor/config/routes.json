@@ -5,7 +5,7 @@
       "path": "/mentors",
       "handler": "mentor.find",
       "config": {
-        "policies": []
+        "policies": ["global::isClassroomManager"]
       }
     },
     {
