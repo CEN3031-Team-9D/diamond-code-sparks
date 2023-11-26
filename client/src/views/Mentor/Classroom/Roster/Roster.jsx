@@ -12,7 +12,7 @@ import CardView from './CardView';
 import { Form, message } from 'antd';
 import { useNavigate } from 'react-router-dom';
 
-export default function Roster({ classroomId }) {
+export default function Roster({ classroomId, classrooms }) {
   const [form] = Form.useForm();
   const [studentData, setStudentData] = useState([]);
   const [editingKey, setEditingKey] = useState('');
@@ -43,7 +43,7 @@ export default function Roster({ classroomId }) {
         message.error(res.err);
       }
     });
-  }, [classroomId]);
+  }, [classroomId, classrooms]);
 
   const getFormattedDate = (value, locale = 'en-US') => {
     if (value) {
@@ -150,6 +150,27 @@ export default function Roster({ classroomId }) {
     }
   };
 
+  const setStudentClassroom = async (studentKey, classroomKey) => {
+    // update studentData state if student removed
+    if (classroomKey !== classroom.id) {
+      const newData = [...studentData];
+      const index = newData.findIndex((student) => student.key === studentKey);
+      newData.splice(index, 1);
+      setStudentData(newData);
+    }
+    // update student in DB
+    let student = classroom.students.find((student) => student.id === studentKey);
+    student.classroom = classroomKey;
+    const res = await updateStudent(studentKey, student);
+    if (res.data) {
+      message.success(
+	`Successfully transferred ${res.data.name} to ${res.data.classroom.name}.`
+      );
+    } else {
+      message.error(res.err);
+    }
+  };
+
   const handleDelete = async (key) => {
     const dataSource = [...studentData];
     setStudentData(dataSource.filter((item) => item.key !== key));
@@ -192,6 +213,8 @@ export default function Roster({ classroomId }) {
           form={form}
           handleDelete={handleDelete}
           getFormattedDate={getFormattedDate}
+	  classrooms={classrooms}
+	  setStudentClassroom={setStudentClassroom}
         />
       ) : (
         <CardView
