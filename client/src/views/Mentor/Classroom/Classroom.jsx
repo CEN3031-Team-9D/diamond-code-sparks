@@ -1,12 +1,13 @@
-import {React, useEffect} from 'react';
-import { Tabs } from 'antd';
+import { React, useEffect, useState } from 'react';
+import { getMentor, getClassrooms } from '../../../Utils/requests';
+import { Tabs, message } from 'antd';
 import './Classroom.less';
 
 import NavBar from '../../../components/NavBar/NavBar';
 import Roster from './Roster/Roster';
 import Home from './Home/Home';
 import SavedWorkSpaceTab from '../../../components/Tabs/SavedWorkspaceTab';
-import { useSearchParams, useParams } from 'react-router-dom';
+import { useSearchParams, useParams, useLocation, useNavigate } from 'react-router-dom';
 
 const { TabPane } = Tabs;
 
@@ -16,14 +17,30 @@ export default function Classroom({
   setSelectedActivity,
 }) {
   const [searchParams, setSearchParams] = useSearchParams();
+  const [classrooms, setClassrooms] = useState([]);
 
   const { id } = useParams();
   const tab = searchParams.get('tab');
   const viewing = searchParams.get('viewing');
+  const navigate = useNavigate();
 
   useEffect(() => {
     sessionStorage.setItem('classroomId', id);
-
+    let classroomIds = [];
+    getMentor().then((res) => {
+      if (res.data) {
+        res.data.classrooms.forEach((classroom) => {
+          classroomIds.push(classroom.id);
+        });
+        getClassrooms(classroomIds).then((classrooms) => {
+          setClassrooms(classrooms);
+        });
+      } else {
+        message.error(res.err);
+        navigate('/teacherlogin');
+      }
+    });
+    sessionStorage.setItem('classrooms', classrooms);
   }, [id]);
 
   return (
@@ -42,7 +59,7 @@ export default function Classroom({
           />
         </TabPane>
         <TabPane tab='Roster' key='roster'>
-          <Roster handleLogout={handleLogout} classroomId={id} />
+          <Roster handleLogout={handleLogout} classroomId={id} classrooms={classrooms} />
         </TabPane>
         <TabPane tab='Saved Workspaces' key='workspace'>
           <SavedWorkSpaceTab

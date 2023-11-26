@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Form, Input, Popconfirm, Switch, Table } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import StudentModal from './StudentModal';
+import Transfer from './Transfer';
 import Picker from 'emoji-picker-react';
 
 export default function ListView(props) {
@@ -16,6 +17,8 @@ export default function ListView(props) {
     save,
     form,
     getFormattedDate,
+    classrooms,
+    setStudentClassroom
   } = props;
 
   const [chosenCharacter, setChosenCharacter] = useState('');
@@ -127,7 +130,7 @@ export default function ListView(props) {
       dataIndex: 'character',
       key: 'character',
       editable: true,
-      width: '22.5%',
+      width: '12.5%',
       align: 'left',
     },
     {
@@ -197,6 +200,20 @@ export default function ListView(props) {
           </button>
         );
       },
+    },
+    {
+      title: 'Transfer',
+      dataIndex: 'transfer',
+      key: 'transfer',
+      width: '10%',
+      align: 'right',
+      render: (_, record) => (
+	<Transfer
+	  student={record}
+	  classrooms={classrooms}
+	  setStudentClassroom={setStudentClassroom}
+	/>
+      )
     },
     {
       title: 'Delete',
