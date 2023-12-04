@@ -1,5 +1,6 @@
 import { Button, Form, Input, message, Modal } from "antd"
 import React, { useEffect, useState } from "react"
+import MarkdownEditor from "@uiw/react-markdown-editor"
 import { useNavigate } from "react-router-dom"
 import {
   getActivity,
@@ -27,6 +28,7 @@ const ActivityDetailModal = ({
   const [StandardS, setStandardS] = useState("")
   const [images, setImages] = useState("")
   const [link, setLink] = useState("")
+  const [longDescription, setLongDescription] = useState("")
 
   const [scienceComponents, setScienceComponents] = useState([])
   const [makingComponents, setMakingComponents] = useState([])
@@ -48,6 +50,7 @@ const ActivityDetailModal = ({
       setStandardS(response.data.StandardS)
       setImages(response.data.images)
       setLink(response.data.link)
+      setLongDescription(response.data.long_description)
       setLinkError(false)
       const science = response.data.learning_components
         .filter(component => component.learning_component_type === SCIENCE)
@@ -120,6 +123,7 @@ const ActivityDetailModal = ({
       StandardS,
       images,
       link,
+      longDescription,
       scienceComponents,
       makingComponents,
       computationComponents
@@ -145,6 +149,8 @@ const ActivityDetailModal = ({
     }
   }
 
+  document.documentElement.setAttribute("data-color-mode", "light")
+
   return (
     <Modal
       title="Selected Activity Details Editor"
@@ -152,6 +158,7 @@ const ActivityDetailModal = ({
       onCancel={() => setActivityDetailsVisible(false)}
       footer={null}
       width="45vw"
+      bodyStyle={{ overflow: "auto", maxHeight: "calc(100vh - 250px)" }}
     >
       <Form
         id="activity-detail-editor"
@@ -236,6 +243,12 @@ const ActivityDetailModal = ({
             placeholder="Enter a link"
           ></Input>
         </Form.Item>
+	<Form.Item id="form-label" label="Long Description (Optional)">
+	  <MarkdownEditor
+	    value={longDescription || ""}
+	    onChange={(value, _) => setLongDescription(value)}
+      	  />
+	</Form.Item>
         <Form.Item
           id="form-label"
           wrapperCol={{
