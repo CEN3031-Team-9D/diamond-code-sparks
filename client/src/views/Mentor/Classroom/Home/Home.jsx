@@ -8,6 +8,7 @@ import {
 import MentorSubHeader from '../../../../components/MentorSubHeader/MentorSubHeader';
 import DisplayCodeModal from './DisplayCodeModal';
 import MentorActivityDetailModal from './MentorActivityDetailModal';
+import LongDescriptionModal from './LongDescriptionModal';
 import LessonModuleModal from './LessonModuleSelect/LessonModuleModal';
 import { message, Tag } from 'antd';
 import { useNavigate } from 'react-router-dom';
@@ -153,6 +154,10 @@ export default function Home({ classroomId, viewing }) {
                             Demo Template
                           </button>
                         )}
+			<LongDescriptionModal
+			  learningStandard={activeLessonModule}
+			  selectActivity={activity}
+			/>
                         <MentorActivityDetailModal
                           learningStandard={activeLessonModule}
                           selectActivity={activity}
