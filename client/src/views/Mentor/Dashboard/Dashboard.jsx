@@ -10,6 +10,7 @@ import {
 import { message, Tabs, Table, Input, Select, Button, Popconfirm, Dropdown, Space } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import './Dashboard.less';
+import Share from './Share';
 import DashboardDisplayCodeModal from './DashboardDisplayCodeModal';
 import MentorSubHeader from '../../../components/MentorSubHeader/MentorSubHeader';
 import NavBar from '../../../components/NavBar/NavBar';
@@ -171,12 +172,11 @@ export default function Dashboard() {
       key: 'share',
       width: '10%',
       align: 'right',
-      render: (_, lesson) => ( // work on adding data from the request for a dropdown
-        <Popconfirm
-          title={'Choose a teacher to share with: '}
-        >
-          <button id={'share-btn'}>Share</button>
-        </Popconfirm>
+      render: (_, key) => (
+        <Share
+          lesson={key}
+          teachers={teachers}
+        />
       ),
     },
   ];
