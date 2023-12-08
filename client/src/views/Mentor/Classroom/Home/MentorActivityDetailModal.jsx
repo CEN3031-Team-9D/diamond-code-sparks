@@ -1,5 +1,6 @@
 import { Button, Form, Input, message, Modal } from "antd"
 import React, { useEffect, useState } from "react"
+import MarkdownEditor from "@uiw/react-markdown-editor"
 import { useNavigate } from "react-router-dom"
 import {
   getActivity,
@@ -19,7 +20,6 @@ const MentorActivityDetailModal = ({
   learningStandard,
   selectActivity,
   setActivities,
-  open,
 }) => {
   const [description, setDescription] = useState("")
   const [template, setTemplate] = useState("")
@@ -27,6 +27,7 @@ const MentorActivityDetailModal = ({
   const [StandardS, setStandardS] = useState("")
   const [images, setImages] = useState("")
   const [link, setLink] = useState("")
+  const [longDescription, setLongDescription] = useState("")
   const [visible, setVisible] = useState(false);
   const [scienceComponents, setScienceComponents] = useState([])
   const [makingComponents, setMakingComponents] = useState([])
@@ -49,6 +50,7 @@ const MentorActivityDetailModal = ({
       setStandardS(response.data.StandardS)
       setImages(response.data.images)
       setLink(response.data.link)
+      setLongDescription(response.data.long_description)
       setLinkError(false)
       const science = response.data.learning_components
         .filter(component => component.learning_component_type === SCIENCE)
@@ -116,10 +118,10 @@ const MentorActivityDetailModal = ({
     const res = await updateActivityDetails(
       selectActivity.id,
       description,
-      //template,
       StandardS,
       images,
       link,
+      longDescription,
       scienceComponents,
       makingComponents,
       computationComponents
@@ -130,7 +132,7 @@ const MentorActivityDetailModal = ({
       message.success("Successfully saved activity")
       // just save the form
       if (submitButton === 0) {
-        const getActivityAll = await getLessonModuleActivities(viewing)
+        const getActivityAll = await getLessonModuleActivities(learningStandard.id)
         const myActivities = getActivityAll.data
         myActivities.sort((a, b) => (a.number > b.number ? 1 : -1))
         setActivities([...myActivities])
@@ -147,27 +149,28 @@ const MentorActivityDetailModal = ({
   const showModal = () => {
     setVisible(true)
     //setOpen(true)
-};
+  };
+
+  document.documentElement.setAttribute("data-color-mode", "light")
+
   return (
     <div id="mentoredit">
-    <Button id="view-activity-button"
-    onClick={showModal} style={{width: '40px',marginRight: "auto"}} >
-<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"
->
-<g
-            id="link"
-            stroke="none"
-            fill="none"
-          >
-            </g>
-            <path d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z"/></svg>
-      </Button>
+    <Button
+      id="view-activity-button"
+      onClick={showModal}
+      style={{width: '40px',marginRight: "auto"}}
+    >
+      <svg height="1em" viewBox="0 0 512 512">
+        <path d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z"/>
+      </svg>
+    </Button>
     <Modal
       title={`${learningStandard.name} - Activity ${selectActivity.number} - ID ${selectActivity.id}`}
       visible={visible}
       onCancel={() => setVisible(false)}
       footer={null}
       width="45vw"
+      bodyStyle={{ overflow: "auto", maxHeight: "calc(100vh - 250px)" }}
     >
       <Form
         id="activity-detail-editor"
@@ -261,6 +264,12 @@ const MentorActivityDetailModal = ({
             placeholder="Enter a link"
           ></Input>
         </Form.Item>
+	<Form.Item id="form-label" label="Long Description (Optional)">
+	  <MarkdownEditor
+	    value={longDescription || ""}
+	    onChange={(value, _) => setLongDescription(value)}
+	  />
+	</Form.Item>
         <Form.Item
           id="form-label"
           wrapperCol={{
