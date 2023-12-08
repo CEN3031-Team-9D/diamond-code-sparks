@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@loadable/component": "^5.15.2",
+    "@uiw/react-markdown-editor": "^6.0.0",
     "antd": "^4.24.8",
     "axios": "^1.4.0",
     "cross-env": "^7.0.3",
