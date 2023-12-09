@@ -5,7 +5,9 @@ import {
   getLessonModuleAll,
   deleteLessonModule,
   getGrades,
-  getTeachers
+  getTeachers,
+  getAllUnits,
+  deleteUnit
 } from '../../../Utils/requests';
 import { message, Tabs, Table, Input, Select, Button, Popconfirm, Dropdown, Space } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
@@ -32,6 +34,7 @@ export default function Dashboard() {
   const [filter, setFilter] = useState('');
   const [gradeList, setGradeList] = useState([]);
   const [learningStandardList, setLessonModuleList] = useState([]);
+  const [unitList, setUnitList] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState(
     searchParams.has('tab') ? searchParams.get('tab') : 'home'
@@ -45,6 +48,9 @@ export default function Dashboard() {
   const [activeClassrooms, setActiveClassrooms] = useState([]);
   const [inactiveClassrooms, setInactiveClassrooms] = useState([]);
   const [teachers, setTeachers] = useState([]);
+  const [heading, setHeading] = useState("Units");
+  const [showingUnits, setShowingUnits] = useState(true);
+  const [unit, setUnit] = useState({});
 
   useEffect(() => {
     let classroomIds = [];
@@ -88,11 +94,13 @@ export default function Dashboard() {
       }
     });
     const fetchData = async () => {
-      const [lsResponse, gradeResponse] = await Promise.all([
-        getLessonModuleAll(),
+      const [lsResponse, unitResponse, gradeResponse] = await Promise.all([
+	getLessonModuleAll(),
+	getAllUnits(),
         getGrades(),
       ]);
       setLessonModuleList(lsResponse.data);
+      setUnitList(unitResponse.data);
       const grades = gradeResponse.data;
       grades.sort((a, b) => (a.id > b.id ? 1 : -1));
       setGradeList(grades);
@@ -100,47 +108,109 @@ export default function Dashboard() {
     fetchData();
   }, [navigate]); // Added navigate to the dependency array as it is being used inside the effect
 
-  const columns = [
+  const viewLessons = (key) => {
+    setHeading(key.name);
+    setShowingUnits(false);
+    setPage(1);
+    setUnit(key);
+  };
+
+  const handleBack = () => {
+    setHeading("Units");
+    setShowingUnits(true);
+    setPage(1);
+    setUnit({});
+  };
+  
+  const unitColumns = [
     {
-      title: 'Unit',
-      dataIndex: 'unit',
-      key: 'unit',
-      editable: true,
-      width: '22.5%',
-      align: 'left',
-      render: (_, key) => (
-        <UnitEditor id={key.unit.id} unitName={key.unit.name} linkBtn={true} />
-      ),
+      title: 'Name',
+      dataIndex: 'name',
+      width: '35%',
+      align: 'left'
     },
     {
-      title: 'Lesson',
-      dataIndex: 'name',
-      key: 'name',
-      editable: true,
-      width: '22.5%',
+      title: 'Description',
+      dataIndex: 'standards_description',
+      width: '35%',
       align: 'left',
+    },
+    {
+      title: 'View Lessons',
+      key: 'view',
+      width: '10%',
+      align: 'right',
+      render: (_, key) => <button id="link-btn" onClick={() => viewLessons(key)}>View</button>
+    },
+    {
+      title: "Edit",
+      key: "edit",
+      width: "10%",
+      align: "right",
       render: (_, key) => (
-        <LessonEditor
-          learningStandard={key}
-          linkBtn={true}
-          viewing={viewing}
-          setViewing={setViewing}
-          tab={activeTab}
-          page={page}
-        />
+	<UnitEditor id={key.id} setUnitList={setUnitList} linkBtn={true} />
+      )
+    },
+    {
+      title: 'Delete',
+      key: 'delete',
+      width: '10%',
+      align: 'right',
+      render: (_, key) => (
+        <Popconfirm
+          title={'Are you sure you want to delete this unit?'}
+          icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
+          onConfirm={async () => {
+            const res = await deleteUnit(key.id);
+            if (res.err) {
+              message.error(res.err);
+            } else {
+              setUnitList(
+                unitList.filter((unit) => {
+                  return unit.id !== key.id;
+                })
+              );
+              message.success('Delete success');
+            }
+          }}
+        >
+	  <button id={'link-btn'}>Delete</button>
+        </Popconfirm>
       ),
+    },
+  ];
+
+  const lessonColumns = [
+    {
+      title: 'Name',
+      dataIndex: 'name',
+      width: '35%',
+      align: 'left',
     },
     {
       title: 'Description',
       dataIndex: 'expectations',
-      key: 'character',
-      editable: true,
-      width: '22.5%',
+      width: '35%',
       align: 'left',
     },
     {
+      title: 'Edit',
+      key: 'Edit',
+      width: '10%',
+      align: 'right',
+      render: (_, key) => (
+        <LessonEditor
+          learningStandard={key}
+          viewing={viewing}
+          setViewing={setViewing}
+          tab={activeTab}
+          page={page}
+	  setLessonModuleList={setLessonModuleList}
+        />
+      ),
+    },
+    {
       title: 'Delete',
-      dataIndex: 'delete',
       key: 'delete',
       width: '10%',
       align: 'right',
@@ -168,7 +238,6 @@ export default function Dashboard() {
     },
     {
       title: 'Share',
-      dataIndex: 'share',
       key: 'share',
       width: '10%',
       align: 'right',
@@ -333,31 +402,37 @@ export default function Dashboard() {
       console.error('Failed to update classroom', error);
     }
   };
-  
-  
 
   return (
     <div className='container nav-padding'>
       <NavBar />
       <Tabs defaultActiveKey={activeTab} onChange={onTabChange}>
         <TabPane tab="Your Lessons" key="home">
+	  {!showingUnits &&
+	    <button id="home-back-btn" onClick={handleBack}>
+	      <i className="fa fa-arrow-left" aria-hidden="true" />
+	    </button>
+	  }
 	  <div id='page-header'>
-            <h1>Lessons & Units</h1>
+            <h1>{heading}</h1>
           </div>
           <div id='content-creator-table-container'>
             <div id='content-creator-btn-container'>
-              <UnitCreator gradeList={gradeList} />
-              <LessonModuleActivityCreator
-                setLessonModuleList={setLessonModuleList}
-                viewing={viewing}
-                setViewing={setViewing}
-                tab={activeTab}
-                page={page}
-              />
+	      {
+		showingUnits ? <UnitCreator gradeList={gradeList} setUnitList={setUnitList} />
+		: <LessonModuleActivityCreator
+                    setLessonModuleList={setLessonModuleList}
+	            viewing={viewing}
+	            setViewing={setViewing}
+		    unit={unit}
+                  />
+	      }
             </div>
             <Table
-              columns={columns}
-              dataSource={learningStandardList}
+              columns={showingUnits ? unitColumns : lessonColumns}
+              dataSource={showingUnits ? unitList : learningStandardList.filter((ls) => {
+		return ls.unit.id == unit.id;
+              })}
               rowClassName='editable-row'
               rowKey='id'
               onChange={(Pagination) => {

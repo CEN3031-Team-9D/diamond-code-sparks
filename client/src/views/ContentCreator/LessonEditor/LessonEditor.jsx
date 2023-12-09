@@ -4,6 +4,7 @@ import { useSearchParams } from "react-router-dom"
 import {
   getLessonModule,
   updateLessonModule,
+  getLessonModuleAll
 } from "../../../Utils/requests"
 import ActivityEditor from "../ActivityEditor/ActivityEditor"
 
@@ -13,14 +14,14 @@ export default function LessonEditor({
   setViewing,
   tab,
   page,
+  setLessonModuleList
 }) {
   const [visible, setVisible] = useState(false)
-  const [name, setName] = useState(learningStandard.name)
+  const [name, setName] = useState("")
   const [description, setDescription] = useState("")
   const [standards, setStandards] = useState("")
   const [link, setLink] = useState("")
   const [linkError, setLinkError] = useState(false)
-  const [displayName, setDisplayName] = useState(learningStandard.name)
   // eslint-disable-next-line
   const [_, setSearchParams] = useSearchParams()
 
@@ -33,10 +34,6 @@ export default function LessonEditor({
     setLink(res.data.link)
     setLinkError(false)
   }
-
-  useEffect(() => {
-    setDisplayName(learningStandard.name)
-  }, [learningStandard.name])
 
   const handleCancel = () => {
     setVisible(false)
@@ -62,7 +59,8 @@ export default function LessonEditor({
       message.error("Fail to update lesson")
     } else {
       message.success("Update lesson success")
-      setDisplayName(name)
+      const lsRes = await getLessonModuleAll()
+      setLessonModuleList(lsRes.data)
       setSearchParams({ tab, page, activity: response.data.id })
       setViewing(response.data.id)
       setVisible(false)
@@ -80,9 +78,7 @@ export default function LessonEditor({
 
   return (
     <div>
-      <button id="link-btn" onClick={showModal}>
-        {displayName}
-      </button>
+      <button id="link-btn" onClick={showModal}>Edit</button>
       <Modal
         title="Lesson Editor"
         open={visible}
