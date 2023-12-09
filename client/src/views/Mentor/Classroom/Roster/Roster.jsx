@@ -229,6 +229,7 @@ function Roster({ classroomId, classrooms }) {
 }
 
 Roster.propTypes = {
+  classroomId: PropTypes.number.isRequired,
   classrooms: PropTypes.arrayOf(PropTypes.object).isRequired
 }
 

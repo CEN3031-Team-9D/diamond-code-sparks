@@ -144,6 +144,7 @@ function UnitCreator({ gradeList, setUnitList }) {
 }
 
 UnitCreator.propTypes = {
+  gradeList: PropTypes.arrayOf(PropTypes.object).isRequired,
   setUnitList: PropTypes.func.isRequired
 }
 

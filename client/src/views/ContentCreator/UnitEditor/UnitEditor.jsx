@@ -129,6 +129,7 @@ function UnitCreator({ id, setUnitList }) {
 }
 
 UnitCreator.propTypes = {
+  id: PropTypes.number.isRequired,
   setUnitList: PropTypes.func.isRequired
 }
 
