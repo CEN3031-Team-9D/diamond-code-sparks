@@ -1,5 +1,6 @@
 import { Button, Form, Input, message, Modal } from "antd"
 import React, { useEffect, useState } from "react"
+import PropTypes from "prop-types"
 import MarkdownEditor from "@uiw/react-markdown-editor"
 import { useNavigate } from "react-router-dom"
 import {
@@ -307,6 +308,12 @@ const MentorActivityDetailModal = ({
     </Modal>
     </div>
   )
+}
+
+MentorActivityDetailModal.propTypes = {
+  learningStandard: PropTypes.shape({
+    id: PropTypes.number.isRequired
+  }).isRequired
 }
 
 export default MentorActivityDetailModal

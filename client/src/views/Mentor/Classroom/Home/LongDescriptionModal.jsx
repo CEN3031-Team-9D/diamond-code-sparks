@@ -1,5 +1,6 @@
 import { Button, message, Modal } from "antd"
 import React, { useEffect, useState } from "react"
+import PropTypes from "prop-types"
 import MarkdownEditor from "@uiw/react-markdown-editor"
 import { getActivity } from "../../../../Utils/requests"
 
@@ -44,6 +45,16 @@ const LongDescriptionModal = ({ learningStandard, selectActivity }) => {
       </Modal>
     </div>
   )
+}
+
+LongDescriptionModal.propTypes = {
+  learningStandard: PropTypes.shape({
+    name: PropTypes.string.isRequired
+  }).isRequired,
+  selectActivity: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    number: PropTypes.number.isRequired
+  }).isRequired,
 }
 
 export default LongDescriptionModal

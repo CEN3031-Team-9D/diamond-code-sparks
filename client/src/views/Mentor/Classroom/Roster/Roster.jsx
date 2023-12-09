@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import PropTypes from "prop-types";
 import {
   deleteStudent,
   getClassroom,
@@ -12,7 +13,7 @@ import CardView from './CardView';
 import { Form, message } from 'antd';
 import { useNavigate } from 'react-router-dom';
 
-export default function Roster({ classroomId, classrooms }) {
+function Roster({ classroomId, classrooms }) {
   const [form] = Form.useForm();
   const [studentData, setStudentData] = useState([]);
   const [editingKey, setEditingKey] = useState('');
@@ -226,3 +227,9 @@ export default function Roster({ classroomId, classrooms }) {
     </div>
   );
 }
+
+Roster.propTypes = {
+  classrooms: PropTypes.arrayOf(PropTypes.object).isRequired
+}
+
+export default Roster

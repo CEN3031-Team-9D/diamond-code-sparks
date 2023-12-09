@@ -7,7 +7,7 @@ import NavBar from '../../../components/NavBar/NavBar';
 import Roster from './Roster/Roster';
 import Home from './Home/Home';
 import SavedWorkSpaceTab from '../../../components/Tabs/SavedWorkspaceTab';
-import { useSearchParams, useParams, useLocation, useNavigate } from 'react-router-dom';
+import { useSearchParams, useParams, useNavigate } from 'react-router-dom';
 
 const { TabPane } = Tabs;
 

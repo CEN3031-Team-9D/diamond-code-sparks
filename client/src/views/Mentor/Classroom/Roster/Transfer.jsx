@@ -1,7 +1,8 @@
 import { Modal, Button, Form, Select } from 'antd';
 import React, { useState } from 'react';
+import PropTypes from "prop-types";
 
-export default function Transfer({ student, classrooms, setStudentClassroom }) {
+function Transfer({ student, classrooms, setStudentClassroom }) {
   const [visible, setVisible] = useState(false);
   const [form] = Form.useForm();
 
@@ -41,3 +42,13 @@ export default function Transfer({ student, classrooms, setStudentClassroom }) {
     </div>
   );
 }
+
+Transfer.propTypes = {
+  student: PropTypes.shape({
+    key: PropTypes.number.isRequired
+  }).isRequired,
+  classrooms: PropTypes.arrayOf(PropTypes.object).isRequired,
+  setStudentClassroom: PropTypes.func.isRequired
+}
+
+export default Transfer

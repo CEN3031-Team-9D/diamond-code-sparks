@@ -1,5 +1,6 @@
 import { Button, Form, Input, message, Modal } from "antd"
 import React, { useState } from "react"
+import PropTypes from "prop-types"
 import { useSearchParams } from "react-router-dom"
 import {
   createActivity,
@@ -9,7 +10,7 @@ import {
 import ActivityEditor from "../ActivityEditor/ActivityEditor"
 import "./LessonModuleCreator.less"
 
-export default function LessonModuleCreator({
+function LessonModuleCreator({
   setLessonModuleList,
   viewing,
   setViewing,
@@ -211,3 +212,9 @@ export default function LessonModuleCreator({
     </div>
   )
 }
+
+LessonModuleCreator.propTypes = {
+  unit: PropTypes.object.isRequired
+}
+
+export default LessonModuleCreator;

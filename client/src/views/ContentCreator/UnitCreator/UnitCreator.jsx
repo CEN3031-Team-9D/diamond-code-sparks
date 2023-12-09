@@ -1,9 +1,10 @@
 import { Button, Form, Input, message, Modal } from "antd"
 import React, { useState } from "react"
+import PropTypes from "prop-types"
 import { createUnit, getAllUnits } from "../../../Utils/requests"
 import "./UnitCreator.less"
 
-export default function UnitCreator({ gradeList, setUnitList }) {
+function UnitCreator({ gradeList, setUnitList }) {
   const [visible, setVisible] = useState(false)
   const [grade, setGrade] = useState("")
   const [name, setName] = useState("")
@@ -141,3 +142,9 @@ export default function UnitCreator({ gradeList, setUnitList }) {
     </div>
   )
 }
+
+UnitCreator.propTypes = {
+  setUnitList: PropTypes.func.isRequired
+}
+
+export default UnitCreator;

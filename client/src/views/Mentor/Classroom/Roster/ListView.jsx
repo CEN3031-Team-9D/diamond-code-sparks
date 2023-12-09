@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
+import PropTypes from "prop-types"
 import { Form, Input, Popconfirm, Switch, Table } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import StudentModal from './StudentModal';
 import Transfer from './Transfer';
 import Picker from 'emoji-picker-react';
 
-export default function ListView(props) {
+function ListView(props) {
   const {
     studentData,
     handleDelete,
@@ -298,3 +299,10 @@ export default function ListView(props) {
     </div>
   );
 }
+
+ListView.propTypes = {
+  classrooms: PropTypes.arrayOf(PropTypes.object).isRequired,
+  setStudentClassroom: PropTypes.func.isRequired
+}
+
+export default ListView
