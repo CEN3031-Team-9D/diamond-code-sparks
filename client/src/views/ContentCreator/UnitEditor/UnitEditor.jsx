@@ -1,19 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Input, Modal, message } from 'antd';
-import { getUnit, updateUnit } from '../../../Utils/requests';
+import { getUnit, updateUnit, getAllUnits } from '../../../Utils/requests';
 
 import './UnitEditor.less';
 
-export default function UnitCreator({ id, unitName }) {
+export default function UnitCreator({ id, setUnitList }) {
   const [visible, setVisible] = useState(false);
   const [gradeId, setGradeId] = useState('');
   const [grade, setGrade] = useState('');
-  const [name, setName] = useState(unitName);
+  const [name, setName] = useState("");
   const [number, setNumber] = useState('');
   const [description, setDescription] = useState('');
   const [standard, setStandard] = useState('');
-
-  const [displayName, setDisplayName] = useState(unitName);
 
   const showModal = async () => {
     setVisible(true);
@@ -25,10 +23,6 @@ export default function UnitCreator({ id, unitName }) {
     setDescription(res.data.standards_description);
     setStandard(res.data.standards_id);
   };
-
-  useEffect(() => {
-    setDisplayName(unitName);
-  }, [unitName]);
 
   useEffect(() => {
     const fetchUnit = async () => {
@@ -61,16 +55,15 @@ export default function UnitCreator({ id, unitName }) {
       message.error('Fail to update unit');
     } else {
       message.success('Update unit success');
-      setDisplayName(name);
+      const unitRes = await getAllUnits();
+      setUnitList(unitRes.data);
       setVisible(false);
     }
   };
 
   return (
     <div>
-      <button id='link-btn' onClick={showModal}>
-        {displayName}
-      </button>
+      <button id='link-btn' onClick={showModal}>Edit</button>
       <Modal
         title='Unit Editor'
         visible={visible}

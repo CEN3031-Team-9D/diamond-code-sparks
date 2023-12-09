@@ -430,6 +430,14 @@ export const updateUnit = async (
     error: 'Failed to update unit',
   });
 
+export const deleteUnit = async (id) =>
+  makeRequest({
+    method: DELETE,
+    path: `${server}/units/${id}`,
+    auth: true,
+    error: 'Failed to delete unit.',
+  });
+
 export const getGrades = async () =>
   makeRequest({
     method: GET,

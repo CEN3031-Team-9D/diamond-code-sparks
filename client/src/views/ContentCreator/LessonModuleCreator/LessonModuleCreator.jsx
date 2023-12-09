@@ -1,10 +1,9 @@
 import { Button, Form, Input, message, Modal } from "antd"
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import { useSearchParams } from "react-router-dom"
 import {
   createActivity,
   createLessonModule,
-  getAllUnits,
   getLessonModuleAll,
 } from "../../../Utils/requests"
 import ActivityEditor from "../ActivityEditor/ActivityEditor"
@@ -14,12 +13,11 @@ export default function LessonModuleCreator({
   setLessonModuleList,
   viewing,
   setViewing,
+  unit
 }) {
   const [visible, setVisible] = useState(false)
-  const [unitList, setUnitList] = useState([])
   const [name, setName] = useState("")
   const [description, setDescription] = useState("")
-  const [unit, setUnit] = useState("")
   const [numOfActivityLevels, setNumOfActivityLevels] = useState("")
   const [standards, setStandards] = useState("")
   const [link, setLink] = useState("")
@@ -30,17 +28,7 @@ export default function LessonModuleCreator({
 
   let found
 
-  useEffect(() => {
-    const getUnits = async () => {
-      const res = await getAllUnits()
-      setUnitList(res.data)
-    }
-    getUnits()
-  }, [])
-
   const showModal = async () => {
-    const res = await getAllUnits()
-    setUnitList(res.data)
     setDescription("")
     setName("")
     setStandards("")
@@ -132,24 +120,6 @@ export default function LessonModuleCreator({
           layout="horizontal"
           size="default"
         >
-          <Form.Item label="Unit Name">
-            <select
-              id="unit-name-dropdown"
-              name="unit"
-              defaultValue={unit}
-              onChange={e => setUnit(e.target.value)}
-              required
-            >
-              <option key={0} value={unit} id="disabled-option" disabled>
-                Unit
-              </option>
-              {unitList.map(unit_ => (
-                <option key={unit_.id} value={unit_.id}>
-                  {unit_.name}
-                </option>
-              ))}
-            </select>
-          </Form.Item>
           <Form.Item label="Lesson Name">
             <Input
               onChange={e => setName(e.target.value)}
