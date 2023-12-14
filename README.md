@@ -28,5 +28,6 @@ Now the application can be accessed at `localhost:3000` in Google Chrome. The St
 
 ## Outstanding Work
 
+* Fix View Lessons bug
 * Fix teacher activity template bug
 * Update dependencies
