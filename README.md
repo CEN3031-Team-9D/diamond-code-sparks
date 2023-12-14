@@ -38,7 +38,7 @@ Now the application can be accessed at `localhost:3000` in Google Chrome. The St
   
 ## Outstanding Work
 * Allow groups to be modified from classroom manager frontend
-* Allow students to be visible from classroom manager frontend
+* Allow students' group memberships to be visible from classroom manager frontend
 * Fix View Lessons bug
 * Fix teacher activity template bug
 * Update dependencies
