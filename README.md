@@ -31,10 +31,14 @@ Now the application can be accessed at `localhost:3000` in Google Chrome. The St
   ![](https://github.com/CEN3031-Team-9D/diamond-code-sparks/assets/40278799/123ec756-d810-4283-84f6-50000cc44b39)
 * Classroom view with inactive & active classes
   ![](https://github.com/CEN3031-Team-9D/diamond-code-sparks/assets/40278799/f18322e9-a842-47cf-ab31-d3c09c67d149)
+* Added groups page to the classroom view
+  ![image](https://github.com/CEN3031-Team-9D/diamond-code-sparks/assets/87380231/532b056f-50ee-4235-a888-49bb288440de)
+
 
   
 ## Outstanding Work
-
+* Allow groups to be modified from classroom manager frontend
+* Allow students to be visible from classroom manager frontend
 * Fix View Lessons bug
 * Fix teacher activity template bug
 * Update dependencies
