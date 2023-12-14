@@ -27,9 +27,14 @@ Now the application can be accessed at `localhost:3000` in Google Chrome. The St
   ![](https://raw.githubusercontent.com/CEN3031-Team-9D/diamond-code-sparks/develop/images/transfer.jpg)
 * Sharing lessons with other teachers
   ![](https://raw.githubusercontent.com/CEN3031-Team-9D/diamond-code-sparks/develop/images/teacher.PNG)
-
+* Distrbuting lessons amongst owned classes
+  ![](https://github.com/CEN3031-Team-9D/diamond-code-sparks/assets/40278799/44970cf2-8666-4acd-96fa-ac391514efab)
+* Classroom view with inactive & active classes
+  ![](https://github.com/CEN3031-Team-9D/diamond-code-sparks/assets/40278799/1a92a71e-1bd7-4ac3-95ad-e5ada1c72a71)
+  
 ## Outstanding Work
 
 * Fix View Lessons bug
 * Fix teacher activity template bug
 * Update dependencies
+
