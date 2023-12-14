@@ -26,7 +26,7 @@ Now the application can be accessed at `localhost:3000` in Google Chrome. The St
 * Button allowing teachers to transfer students between their classes
   ![](https://raw.githubusercontent.com/CEN3031-Team-9D/diamond-code-sparks/develop/images/transfer.jpg)
 * Sharing lessons with other teachers
-  ![](https://raw.githubusercontent.com/CEN3031-Team-9D/diamond-code-sparks/develop/images/teacher.jpg)
+  ![](https://raw.githubusercontent.com/CEN3031-Team-9D/diamond-code-sparks/develop/images/teacher.PNG)
 
 ## Outstanding Work
 
